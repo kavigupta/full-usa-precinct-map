@@ -91,6 +91,8 @@ def main():
         tables.append(table)
     res = pd.concat(tables)
     gpd.GeoDataFrame(res).to_file("out/result.shp")
+    res.geometry = res.geometry.apply(lambda x: x.centroid)
+    gpd.GeoDataFrame(res).to_file("out/centroids.shp")
 
 if __name__ == "__main__":
     main()
