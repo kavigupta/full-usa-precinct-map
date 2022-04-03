@@ -82,6 +82,7 @@ def get(state):
     out["geometry"] = frame.geometry
     return pd.DataFrame(out)
 
+
 def main():
     states = us.STATES + [us.states.DC]
     tables = []
@@ -93,6 +94,12 @@ def main():
     gpd.GeoDataFrame(res).to_file("out/result.shp")
     res.geometry = res.geometry.apply(lambda x: x.centroid)
     gpd.GeoDataFrame(res).to_file("out/centroids.shp")
+    xs, ys = res.geometry.apply(lambda x: x.x), res.geometry.apply(lambda x: x.y)
+    res = res[[x for x in res if x != "geometry"]].copy()
+    res["x"] = xs
+    res["y"] = ys
+    res.to_csv("out/centroids.csv")
+
 
 if __name__ == "__main__":
     main()
